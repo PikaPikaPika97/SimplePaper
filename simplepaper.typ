@@ -3,48 +3,55 @@
   authors: (),
   abstract: none,
   keywords: (),
-  body
+  body,
 ) = {
-  let zh_shusong = ("FZShuSong-Z01", "FZShuSong-Z01S")
-  let zh_xiaobiansong = ("FZXiaoBiaoSong-B05", "FZXiaoBiaoSong-B05S")
-  let zh_kai = ("FZKai-Z03", "FZKai-Z03S")
-  let zh_hei = ("FZHei-B01", "FZHei-B01S")
-  let zh_fangsong = ("FZFangSong-Z02", "FZFangSong-Z02S")
+  let zh_song = ("Source Han Serif SC", "SimSun-ExtG")
+  // let zh_xiaobiansong = ("FZXiaoBiaoSong-B05", "FZXiaoBiaoSong-B05S")
+  let zh_kai = ("KaiTi",)
+  let zh_hei = ("Source Han Sans SC", "SimHei")
+  let zh_fangsong = ("FangSong",)
   let en_sans_serif = "Georgia"
   let en_serif = "Times New Roman"
   let en_typewriter = "Courier New"
-  let en_code = "Menlo"
+  let en_code = "Sarasa Mono SC"
+  let zh_sourcesong = "Source Han Serif SC"
+  let zh_sourcehei = "Source Han Sans SC"
+
   // Moidfy the following to change the font.
   let title-font = (en_serif, ..zh_hei)
   let author-font = (en_typewriter, ..zh_fangsong)
-  let body-font = (en_serif, ..zh_shusong)
-  let heading-font = (en_serif, ..zh_xiaobiansong)
+  let body-font = (en_serif, ..zh_song)
+  let heading-font = (en_serif, ..zh_hei)
   let caption-font = (en_serif, ..zh_kai)
   let header-font = (en_serif, ..zh_kai)
   let strong-font = (en_serif, ..zh_hei)
   let emph-font = (en_serif, ..zh_kai)
   let raw-font = (en_code, ..zh_hei)
-  
+
   set document(author: authors.map(author => author.name), title: title)
-  set page(numbering: "1", number-align: center, header: align(left)[
-    #set text(font: header-font)
-    #title
-  ])
+  set page(
+    numbering: "1",
+    number-align: center,
+    header: align(left)[
+      #set text(font: header-font)
+      #title
+    ],
+  )
   set heading(numbering: "1.1")
   set text(font: body-font, lang: "zh", region: "cn")
   set bibliography(style: "gb-7714-2015-numeric")
-  
+
   show heading: it => box(width: 100%)[
     #v(0.50em)
     #set text(font: heading-font)
-    #if it.numbering != none { counter(heading).display() }
+    #if it.numbering != none {
+      counter(heading).display()
+    }
     #h(0.75em)
     #it.body
   ]
 
-  show heading.where(
-    level: 1
-  ): it => box(width: 100%)[
+  show heading.where(level: 1): it => box(width: 100%)[
     #v(0.5em)
     #set align(center)
     #set heading(numbering: "一")
@@ -54,7 +61,14 @@
 
   // Title
   align(center)[
-    #block(text(font: title-font, weight: "bold", 1.75em, title))
+    #block(
+      text(
+        font: title-font,
+        weight: "bold",
+        1.75em,
+        title,
+      ),
+    )
     #v(0.5em)
   ]
 
@@ -66,15 +80,18 @@
     grid(
       columns: slice.len() * (1fr,),
       gutter: 12pt,
-      ..slice.map(author => align(center, {
-        text(12pt, author.name, font: author-font)
-        if "organization" in author [
-          \ #text(author.organization, font: author-font)
-        ]
-        if "email" in author [
-          \ #text(link("mailto:" + author.email), font: author-font)
-        ]
-      }))
+      ..slice.map(author => align(
+        center,
+        {
+          text(12pt, author.name, font: author-font)
+          if "organization" in author [
+            \ #text(author.organization, font: author-font)
+          ]
+          if "email" in author [
+            \ #text(link("mailto:" + author.email), font: author-font)
+          ]
+        },
+      ))
     )
 
     if not is-last {
@@ -142,7 +159,7 @@
     #v(2pt)
     #h(2em) *摘要：* #abstract
 
-    #if keywords!= () [
+    #if keywords != () [
       *关键字：* #keywords.join("；")
     ]
     #v(2pt)
@@ -168,6 +185,6 @@
   set enum(numbering: "(1)")
   block(
     inset: 8pt,
-    width: 100%
+    width: 100%,
   )[*解答.* #h(0.75em) #body]
 }
