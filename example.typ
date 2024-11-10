@@ -5,14 +5,11 @@
   authors: (
     (
       name: "张三",
+      ID: "ZY2402122",
       organization: [Typst Group],
       email: "zs@typst.app",
     ),
-    (
-      name: "李四",
-      organization: [Rust Group],
-      email: "ls@typst.app",
-    ),
+
   ),
   abstract: "本文详细描述了 SimplePaper 模版的使用方法。",
   keywords: (
@@ -35,6 +32,10 @@ SimplePaper#cite(<SimplePaper>) 是 Typst 的模版，用于生成简单的论�
 == 特殊标记 <bug1>
 
 你可以 Typst 的语法对文本进行特殊标记，模板设定了几种语法的样式：*突出*、_强调_、引用@example。
+
+=== 三级标题
+
+这个是什么
 
 
 == 图片

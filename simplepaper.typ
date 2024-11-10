@@ -31,19 +31,19 @@
   set document(author: authors.map(author => author.name), title: title)
   set page(
     numbering: "1",
+    paper: "a4",
     number-align: center,
     header: align(left)[
       #set text(font: header-font)
       #title
     ],
   )
-  set heading(numbering: "1.1")
+  set heading(numbering: "1.1.1")
   set text(font: body-font, lang: "zh", region: "cn")
   set bibliography(style: "gb-7714-2015-numeric")
 
   show heading: it => box(width: 100%)[
     #v(0.50em)
-    #set text(font: heading-font)
     #if it.numbering != none {
       counter(heading).display()
     }
@@ -54,7 +54,22 @@
   show heading.where(level: 1): it => box(width: 100%)[
     #v(0.5em)
     #set align(center)
+    #set text(font: heading-font, weight: "bold")
     #set heading(numbering: "一")
+    #it
+    #v(0.75em)
+  ]
+
+  show heading.where(level: 2): it => box(width: 100%)[
+    #v(0.5em)
+    #set text(font: heading-font, weight: "bold")
+    #it
+    #v(0.75em)
+  ]
+
+  show heading.where(level: 3): it => box(width: 100%)[
+    #v(0.5em)
+    #set text(font: body-font, weight: "medium")
     #it
     #v(0.75em)
   ]
@@ -65,7 +80,7 @@
       text(
         font: title-font,
         weight: "bold",
-        1.75em,
+        size: 1.75em,
         title,
       ),
     )
@@ -73,31 +88,30 @@
   ]
 
   // Display the authors list.
-  for i in range(calc.ceil(authors.len() / 3)) {
-    let end = calc.min((i + 1) * 3, authors.len())
-    let is-last = authors.len() == end
-    let slice = authors.slice(i * 3, end)
-    grid(
-      columns: slice.len() * (1fr,),
-      gutter: 12pt,
-      ..slice.map(author => align(
-        center,
-        {
-          text(12pt, author.name, font: author-font)
-          if "organization" in author [
-            \ #text(author.organization, font: author-font)
-          ]
-          if "email" in author [
-            \ #text(link("mailto:" + author.email), font: author-font)
-          ]
-        },
-      ))
-    )
-
-    if not is-last {
-      v(16pt, weak: true)
-    }
-  }
+  let author_num = authors.len()
+  let author_num_per_line = 3
+  let column_num = calc.min(author_num, author_num_per_line)
+  grid(
+    columns: (1fr,) * column_num,
+    column-gutter: 12pt,
+    row-gutter: 16pt,
+    align: center,
+    ..authors.map(author => {
+      [
+        #set text(font: author-font, size: 12pt)
+        #author.name
+        #if author.ID != none [
+          \ #author.ID
+        ]
+        #if author.organization != none [
+          \ #author.organization
+        ]
+        #if author.email != none [
+          \ #link("mailto:" + author.email)
+        ]
+      ]
+    })
+  )
   v(2em, weak: true)
 
   // Main body
