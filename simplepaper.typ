@@ -100,13 +100,13 @@
       [
         #set text(font: author-font, size: 12pt)
         #author.name
-        #if author.ID != none [
+        #if ("ID" in author) [
           \ #author.ID
         ]
-        #if author.organization != none [
+        #if ("organization" in author) [
           \ #author.organization
         ]
-        #if author.email != none [
+        #if ("email" in author) [
           \ #link("mailto:" + author.email)
         ]
       ]
@@ -120,7 +120,15 @@
   set figure(gap: 0.8cm)
 
   // 定义空白段，解决首段缩进问题
-  let blank_par = par()[#text()[#v(0em, weak: true)];#text()[#h(0em)]]
+  // let blank_par = par()[#text()[#v(0em, weak: true)];#text()[#h(0em)]]
+  let blank_par = context {
+    let b = par[#box()]
+    let t = measure(b + b)
+
+    b
+    v(-t.height)
+  }
+
 
   show figure: it => [
     #v(12pt)
@@ -197,8 +205,13 @@
 
 #let solution(body) = {
   set enum(numbering: "(1)")
+  let blank_par = par()[#text()[#v(0em, weak: true)];#text()[#h(0em)]]
   block(
     inset: 8pt,
     width: 100%,
-  )[*解答.* #h(0.75em) #body]
+  )[
+    *解答.*
+    #blank_par
+    #body
+  ]
 }
