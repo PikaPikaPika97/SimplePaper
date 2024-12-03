@@ -21,9 +21,9 @@
   let title-font = (en_serif, ..zh_hei)
   let author-font = (en_typewriter, ..zh_fangsong)
   let body-font = (en_serif, ..zh_song)
-  let heading-l1-font = (en_serif, ..zh_hei)
-  let heading-l2-font = (en_serif, ..zh_kai)
-  let heading-l3-font = (en_serif, ..zh_song)
+  let heading-l1-font = (..zh_hei)
+  let heading-l2-font = (..zh_kai)
+  let heading-l3-font = (..zh_song)
   let caption-font = (en_serif, ..zh_song)
   let header-font = (en_serif, ..zh_kai)
   let strong-font = (en_serif, ..zh_hei)
@@ -34,6 +34,7 @@
     b
     v(-measure(b + b).height)
   }
+  let noindent()=h(-2em)
 
   set document(author: authors.map(author => author.name), title: title)
   set page(
