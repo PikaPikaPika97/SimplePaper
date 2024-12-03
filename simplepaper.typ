@@ -21,76 +21,65 @@
   let title-font = (en_serif, ..zh_hei)
   let author-font = (en_typewriter, ..zh_fangsong)
   let body-font = (en_serif, ..zh_song)
-  let heading-font = (en_serif, ..zh_hei)
-  let caption-font = (en_serif, ..zh_kai)
+  let heading-l1-font = (en_serif, ..zh_hei)
+  let heading-l2-font = (en_serif, ..zh_kai)
+  let heading-l3-font = (en_serif, ..zh_song)
+  let caption-font = (en_serif, ..zh_song)
   let header-font = (en_serif, ..zh_kai)
   let strong-font = (en_serif, ..zh_hei)
   let emph-font = (en_serif, ..zh_kai)
   let raw-font = (en_code, ..zh_hei)
+  let blank_par = context {
+    let b = par(box())
+    b
+    v(-measure(b + b).height)
+  }
 
   set document(author: authors.map(author => author.name), title: title)
   set page(
     numbering: "1",
     paper: "a4",
     number-align: center,
-    header: align(left)[
-      #set text(font: header-font)
-      #title
-    ],
+    // header: align(left)[
+    //   #set text(font: header-font)
+    //   #title
+    // ],
   )
+
+  set par(leading: 1.25em, spacing: 1.25em, first-line-indent: 2em)
+
   set heading(numbering: "1.1.1")
-  set text(font: body-font, lang: "zh", region: "cn")
-  set bibliography(style: "gb-7714-2015-numeric")
+  show heading: set block(above: 1em, below: 1em)
 
-  show heading: it => box(width: 100%)[
-    #v(0.50em)
-    #if it.numbering != none {
-      counter(heading).display()
-    }
-    #h(0.75em)
-    #it.body
-  ]
-
-  show heading.where(level: 1): it => box(width: 100%)[
-    #v(0.5em)
-    #set align(center)
-    #set text(font: heading-font, weight: "bold")
-    #set heading(numbering: "一")
-    #it
-    #v(0.75em)
-  ]
-
-  show heading.where(level: 2): it => box(width: 100%)[
-    #v(0.5em)
-    #set text(font: heading-font, weight: "bold")
-    #it
-    #v(0.75em)
-  ]
-
-  show heading.where(level: 3): it => box(width: 100%)[
-    #v(0.5em)
-    #set text(font: body-font, weight: "medium")
-    #it
-    #v(0.75em)
-  ]
+  show heading.where(level: 1): it => {
+    set text(font: heading-l1-font, size: 12pt, weight: "regular")
+    it + blank_par
+  }
+  show heading.where(level: 2): it => {
+    set text(font: heading-l2-font, size: 12pt, weight: "regular")
+    set heading(numbering: "1.1")
+    it + blank_par
+  }
+  show heading.where(level: 3): it => {
+    set text(font: heading-l3-font, size: 12pt, weight: "regular")
+    set heading(numbering: "1.1.1")
+    it + blank_par
+  }
 
   // Title
   align(center)[
-    #block(
-      text(
-        font: title-font,
-        weight: "bold",
-        size: 1.75em,
-        title,
-      ),
-    )
-    #v(0.5em)
+    #block()[
+      #set text(font: title-font, size: 24pt, weight: "regular")
+      #title
+    ]
   ]
+
 
   // Display the authors list.
   let author_num = authors.len()
   let author_num_per_line = 3
   let column_num = calc.min(author_num, author_num_per_line)
+  v(2em)
   grid(
     columns: (1fr,) * column_num,
     column-gutter: 12pt,
@@ -114,104 +103,71 @@
   )
   v(2em, weak: true)
 
+  set text(font: body-font, size: 12pt, lang: "zh", region: "cn")
+
   // Main body
+  set figure(gap: 1em)
+  show figure: it => [
+    #set text(font: caption-font, size: 10.5pt)
+    #it
+    #blank_par
+  ]
+  show figure.caption: it => [
+    #it.supplement
+    #context it.counter.display(it.numbering)
+    #it.body
+  ]
+  show figure.where(kind: table): set figure.caption(position: top)
+
   set enum(indent: 2em)
   set list(indent: 2em)
-  set figure(gap: 0.8cm)
-
-  // 定义空白段，解决首段缩进问题
-  // let blank_par = par()[#text()[#v(0em, weak: true)];#text()[#h(0em)]]
-  let blank_par = context {
-    let b = par[#box()]
-    let t = measure(b + b)
-
-    b
-    v(-t.height)
-  }
-
-
-  show figure: it => [
-    #v(12pt)
-    #set text(font: caption-font)
-    #it
-    #blank_par
-    #v(12pt)
-  ]
-
-  show image: it => [
-    #it
-    #blank_par
-  ]
-
   show list: it => [
     #it
     #blank_par
   ]
-
   show enum: it => [
     #it
     #blank_par
   ]
 
-  show table: it => [
-    #set text(font: body-font)
-    #it
-    #blank_par
-  ]
   show strong: set text(font: strong-font)
   show emph: set text(font: emph-font)
-  show ref: set text(red)
+
   show raw.where(block: true): block.with(
     width: 100%,
     fill: luma(240),
     inset: 10pt,
   )
-
   show raw.where(block: true): it => [
     #it
     #blank_par
   ]
 
   show raw: set text(font: raw-font)
-  show link: underline
-  show link: set text(blue)
-  set par(first-line-indent: 2em, justify: true)
+
+  set math.equation(numbering: "(1)")
+  show math.equation.where(block: false): it => h(0.25em, weak: true) + it + h(0.25em, weak: true)
+  show math.equation.where(block: true): it => [
+    #it
+    #blank_par
+  ]
+
+  set bibliography(style: "gb-7714-2015-numeric")
+  show bibliography: it => [
+    #set text(font: body-font, size: 12pt, lang: "zh", region: "cn")
+    #pagebreak()
+    #it.
+  ]
+
 
   if abstract != none [
-    #v(2pt)
-    #h(2em) *摘要：* #abstract
+    #text(font: heading-l1-font)[#h(2em) 摘#h(1em)要：] #abstract
 
     #if keywords != () [
-      *关键字：* #keywords.join("；")
+      #text(font: heading-l1-font)[关键词：] #keywords.join("，")
     ]
-    #v(2pt)
+    #v(1em)
   ]
 
   body
-}
-#let problem-counter = counter("problem")
-#problem-counter.step()
-
-#let problem(body) = {
-  problem-counter.step()
-  set enum(numbering: "(1)")
-  block(
-    fill: rgb(241, 241, 255),
-    inset: 8pt,
-    radius: 2pt,
-    width: 100%,
-  )[*题目 #problem-counter.display().* #h(0.75em) #body]
-}
-
-#let solution(body) = {
-  set enum(numbering: "(1)")
-  let blank_par = par()[#text()[#v(0em, weak: true)];#text()[#h(0em)]]
-  block(
-    inset: 8pt,
-    width: 100%,
-  )[
-    *解答.*
-    #blank_par
-    #body
-  ]
 }
