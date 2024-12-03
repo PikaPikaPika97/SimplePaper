@@ -76,32 +76,36 @@
 
 
   // Display the authors list.
-  let author_num = authors.len()
-  let author_num_per_line = 3
-  let column_num = calc.min(author_num, author_num_per_line)
-  v(2em)
-  grid(
-    columns: (1fr,) * column_num,
-    column-gutter: 12pt,
-    row-gutter: 16pt,
-    align: center,
-    ..authors.map(author => {
-      [
-        #set text(font: author-font, size: 12pt)
-        #author.name
-        #if ("ID" in author) [
-          \ #author.ID
+  if authors != () {
+    set par(leading: 0.75em)
+    let author_num = authors.len()
+    let author_num_per_line = 3
+    let column_num = calc.min(author_num, author_num_per_line)
+    v(2em)
+    grid(
+      columns: (1fr,) * column_num,
+      column-gutter: 12pt,
+      row-gutter: 16pt,
+      align: center,
+      ..authors.map(author => {
+        [
+          #set text(font: author-font, size: 12pt)
+          #author.name
+          #if ("ID" in author) [
+            \ #author.ID
+          ]
+          #if ("organization" in author) [
+            \ #author.organization
+          ]
+          #if ("email" in author) [
+            \ #link("mailto:" + author.email)
+          ]
         ]
-        #if ("organization" in author) [
-          \ #author.organization
-        ]
-        #if ("email" in author) [
-          \ #link("mailto:" + author.email)
-        ]
-      ]
-    })
-  )
-  v(2em, weak: true)
+      })
+    )
+    v(2em, weak: true)
+  }
+
 
   set text(font: body-font, size: 12pt, lang: "zh", region: "cn")
 
