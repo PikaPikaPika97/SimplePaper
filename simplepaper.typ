@@ -21,9 +21,9 @@
   let title-font = (en_serif, ..zh_hei)
   let author-font = (en_typewriter, ..zh_fangsong)
   let body-font = (en_serif, ..zh_song)
-  let heading-l1-font = (..zh_hei)
-  let heading-l2-font = (..zh_kai)
-  let heading-l3-font = (..zh_song)
+  let heading-l1-font = (..zh_hei,)
+  let heading-l2-font = (..zh_kai,)
+  let heading-l3-font = (..zh_song,)
   let caption-font = (en_serif, ..zh_song)
   let header-font = (en_serif, ..zh_kai)
   let strong-font = (en_serif, ..zh_hei)
@@ -34,7 +34,7 @@
     b
     v(-measure(b + b).height)
   }
-  let noindent()=h(-2em)
+  let noindent() = h(-2em)
 
   set document(author: authors.map(author => author.name), title: title)
   set page(
@@ -49,7 +49,7 @@
 
   set par(leading: 1.25em, spacing: 1.25em, first-line-indent: 2em)
 
-  set heading(numbering: "1.1.1")
+  set heading(numbering: "1.1.1", supplement: [节])
   show heading: set block(above: 1em, below: 1em)
 
   show heading.where(level: 1): it => {
@@ -150,12 +150,13 @@
 
   show raw: set text(font: raw-font)
 
-  set math.equation(numbering: "(1)")
+  set math.equation(numbering: "(1)", supplement: [式])
   show math.equation.where(block: false): it => h(0.25em, weak: true) + it + h(0.25em, weak: true)
   show math.equation.where(block: true): it => [
     #it
     #blank_par
   ]
+
 
   set bibliography(style: "gb-7714-2015-numeric")
   show bibliography: it => [
