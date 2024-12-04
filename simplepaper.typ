@@ -124,8 +124,8 @@
   ]
   show figure.where(kind: table): set figure.caption(position: top)
 
-  set enum(indent: 2em)
-  set list(indent: 2em)
+  set enum(numbering: "1).a)")
+  // set list(indent: 2em)
   show list: it => [
     #it
     #blank_par
@@ -157,6 +157,24 @@
     #blank_par
   ]
 
+  show ref: it => {
+    let eq = math.equation
+    let el = it.element
+    if el != none and el.func() == eq {
+      // Override equation references.
+      link(
+        el.location(),
+        [式 #numbering(
+          el.numbering,
+          ..counter(eq).at(el.location()),
+        )],
+      )
+    } else {
+      // Other references as usual.
+      it
+    }
+  }
+
 
   set bibliography(style: "gb-7714-2015-numeric")
   show bibliography: it => [
@@ -177,3 +195,5 @@
 
   body
 }
+
+#let noindent() = h(-2em)
