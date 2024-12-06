@@ -6,29 +6,28 @@
   body,
 ) = {
   let zh_song = ("Source Han Serif SC", "SimSun-ExtG")
-  // let zh_xiaobiansong = ("FZXiaoBiaoSong-B05", "FZXiaoBiaoSong-B05S")
   let zh_kai = ("KaiTi",)
   let zh_hei = ("Source Han Sans SC", "SimHei")
   let zh_fangsong = ("FangSong",)
-  let en_sans_serif = "Georgia"
   let en_serif = "Times New Roman"
   let en_typewriter = "Courier New"
   let en_code = "Sarasa Mono SC"
-  let zh_sourcesong = "Source Han Serif SC"
-  let zh_sourcehei = "Source Han Sans SC"
 
   // Moidfy the following to change the font.
-  let title-font = (en_serif, ..zh_hei)
-  let author-font = (en_typewriter, ..zh_fangsong)
-  let body-font = (en_serif, ..zh_song)
-  let heading-l1-font = (..zh_hei,)
-  let heading-l2-font = (..zh_kai,)
-  let heading-l3-font = (..zh_song,)
-  let caption-font = (en_serif, ..zh_song)
-  let header-font = (en_serif, ..zh_kai)
-  let strong-font = (en_serif, ..zh_hei)
-  let emph-font = (en_serif, ..zh_kai)
-  let raw-font = (en_code, ..zh_hei)
+  let fonts = (
+    title: (en_serif, ..zh_hei),
+    author: (en_typewriter, ..zh_fangsong),
+    body: (en_serif, ..zh_song),
+    heading_l1: (..zh_hei,),
+    heading_l2: (..zh_kai,),
+    heading_l3: (..zh_song,),
+    caption: (en_serif, ..zh_song),
+    header: (en_serif, ..zh_kai),
+    strong: (en_serif, ..zh_hei),
+    emph: (en_serif, ..zh_kai),
+    raw: (en_code, ..zh_hei)
+  )
+
   let blank_par = context {
     let b = par(box())
     b
@@ -41,10 +40,6 @@
     numbering: "1",
     paper: "a4",
     number-align: center,
-    // header: align(left)[
-    //   #set text(font: header-font)
-    //   #title
-    // ],
   )
 
   set par(leading: 1.25em, spacing: 1.25em, first-line-indent: 2em)
@@ -53,26 +48,25 @@
   show heading: set block(above: 1.5em, below: 1.5em)
 
   show heading.where(level: 1): it => {
-    set text(font: heading-l1-font, size: 12pt, weight: "regular")
+    set text(font: fonts.heading_l1, size: 12pt, weight: "regular")
     it + blank_par
   }
   show heading.where(level: 2): it => {
-    set text(font: heading-l2-font, size: 12pt, weight: "regular")
+    set text(font: fonts.heading_l2, size: 12pt, weight: "regular")
     it + blank_par
   }
   show heading.where(level: 3): it => {
-    set text(font: heading-l3-font, size: 12pt, weight: "regular")
+    set text(font: fonts.heading_l3, size: 12pt, weight: "regular")
     it + blank_par
   }
 
   // Title
   align(center)[
     #block()[
-      #set text(font: title-font, size: 24pt, weight: "regular")
+      #set text(font: fonts.title, size: 24pt, weight: "regular")
       #title
     ]
   ]
-
 
   // Display the authors list.
   if authors != () {
@@ -88,7 +82,7 @@
       align: center,
       ..authors.map(author => {
         [
-          #set text(font: author-font, size: 12pt)
+          #set text(font: fonts.author, size: 12pt)
           #author.name
           #if ("ID" in author) [
             \ #author.ID
@@ -105,13 +99,12 @@
     v(2em, weak: true)
   }
 
-
-  set text(font: body-font, size: 12pt, lang: "zh", region: "cn")
+  set text(font: fonts.body, size: 12pt, lang: "zh", region: "cn")
 
   // Main body
   set figure(gap: 1em)
   show figure: it => [
-    #set text(font: caption-font, size: 10.5pt)
+    #set text(font: fonts.caption, size: 10.5pt)
     #it
     #blank_par
   ]
@@ -123,7 +116,6 @@
   show figure.where(kind: table): set figure.caption(position: top)
 
   set enum(numbering: "1).a)")
-  // set list(indent: 2em)
   show list: it => [
     #it
     #blank_par
@@ -133,8 +125,8 @@
     #blank_par
   ]
 
-  show strong: set text(font: strong-font)
-  show emph: set text(font: emph-font)
+  show strong: set text(font: fonts.strong)
+  show emph: set text(font: fonts.emph)
 
   show raw.where(block: true): block.with(
     width: 100%,
@@ -146,7 +138,7 @@
     #blank_par
   ]
 
-  show raw: set text(font: raw-font)
+  show raw: set text(font: fonts.raw)
 
   set math.equation(numbering: "(1)", supplement: [式])
   show math.equation.where(block: false): it => h(0.25em, weak: true) + it + h(0.25em, weak: true)
@@ -173,20 +165,18 @@
     }
   }
 
-
   set bibliography(style: "gb-7714-2015-numeric")
   show bibliography: it => [
-    #set text(font: body-font, size: 12pt, lang: "zh", region: "cn")
+    #set text(font: fonts.body, size: 12pt, lang: "zh", region: "cn")
     #pagebreak()
     #it.
   ]
 
-
   if abstract != none [
-    #text(font: heading-l1-font)[#h(2em) 摘#h(1em)要：] #abstract
+    #text(font: fonts.heading_l1)[#h(2em) 摘#h(1em)要：] #abstract
 
     #if keywords != () [
-      #text(font: heading-l1-font)[关键词：] #keywords.join("，")
+      #text(font: fonts.heading_l1)[关键词：] #keywords.join("，")
     ]
     #v(1em)
   ]
