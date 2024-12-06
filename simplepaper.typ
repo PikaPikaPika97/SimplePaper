@@ -50,7 +50,7 @@
   set par(leading: 1.25em, spacing: 1.25em, first-line-indent: 2em)
 
   set heading(numbering: "1.1.1", supplement: [节])
-  show heading: set block(above: 1em, below: 1em)
+  show heading: set block(above: 1.5em, below: 1.5em)
 
   show heading.where(level: 1): it => {
     set text(font: heading-l1-font, size: 12pt, weight: "regular")
@@ -58,12 +58,10 @@
   }
   show heading.where(level: 2): it => {
     set text(font: heading-l2-font, size: 12pt, weight: "regular")
-    set heading(numbering: "1.1")
     it + blank_par
   }
   show heading.where(level: 3): it => {
     set text(font: heading-l3-font, size: 12pt, weight: "regular")
-    set heading(numbering: "1.1.1")
     it + blank_par
   }
 
@@ -78,7 +76,7 @@
 
   // Display the authors list.
   if authors != () {
-    set par(leading: 0.75em)
+    set par(leading: 0.65em)
     let author_num = authors.len()
     let author_num_per_line = 3
     let column_num = calc.min(author_num, author_num_per_line)
